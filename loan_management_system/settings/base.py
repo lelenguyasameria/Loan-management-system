@@ -39,9 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'accounts',
-    #'loans',# Temporarily commented out to avoid migration issues
-
-    #'repayments',# Temporarily commented out to avoid migration issues
+    'loans',
+    'repayments',
 ]
 
 MIDDLEWARE = [

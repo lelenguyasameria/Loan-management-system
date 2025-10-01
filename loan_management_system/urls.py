@@ -21,4 +21,7 @@ urlpatterns = [
     path('api/accounts/', include('accounts.urls')),
     path('api/loans/', include('loans.urls')),
     path('api/repayments/', include('repayments.urls')),
+
+    # Web routes (for HTML templates)
+    path("accounts/", include("accounts.urls")),
 ]
