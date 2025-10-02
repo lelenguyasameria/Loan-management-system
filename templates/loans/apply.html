@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block title %}Apply for Loan - Loan Management System{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 600px; margin: 2rem auto;">
+    <h2>Apply for a New Loan</h2>
+    
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="amount">Loan Amount ($):</label>
+            <input type="number" id="amount" name="amount" step="0.01" min="100" max="100000" required>
+            <small style="color: #666;">Minimum: $100, Maximum: $100,000</small>
+        </div>
+
+        <div class="form-group">
+            <label for="interest_rate">Interest Rate (%):</label>
+            <input type="number" id="interest_rate" name="interest_rate" step="0.01" min="5" max="25" value="10" required>
+            <small style="color: #666;">Standard rate: 10% per annum</small>
+        </div>
+
+        <div class="form-group">
+            <label for="due_date">Due Date:</label>
+            <input type="date" id="due_date" name="due_date" required>
+            <small style="color: #666;">When do you plan to repay this loan?</small>
+        </div>
+
+        <div class="form-group">
+            <label for="purpose">Loan Purpose (Optional):</label>
+            <select id="purpose" name="purpose">
+                <option value="">Select purpose</option>
+                <option value="business">Business</option>
+                <option value="education">Education</option>
+                <option value="medical">Medical</option>
+                <option value="home">Home Improvement</option>
+                <option value="personal">Personal</option>
+                <option value="other">Other</option>
+            </select>
+        </div>
+
+        <div style="background-color: #f8f9fa; padding: 1rem; border-radius: 4px; margin: 1rem 0;">
+            <h4>Loan Terms & Conditions</h4>
+            <ul style="margin: 0.5rem 0; padding-left: 1.5rem;">
+                <li>All loan applications are subject to approval</li>
+                <li>Interest is calculated annually</li>
+                <li>Late payments may incur additional fees</li>
+                <li>Early repayment is allowed without penalty</li>
+            </ul>
+        </div>
+
+        <button type="submit" class="btn btn-success" style="width: 100%;">Submit Loan Application</button>
+    </form>
+    
+    <div style="text-align: center; margin-top: 1rem;">
+        <a href="{% url 'dashboard' %}">Back to Dashboard</a>
+    </div>
+</div>
+
+<script>
+    // Set minimum date to today
+    document.getElementById('due_date').min = new Date().toISOString().split('T')[0];
+    
+    // Calculate and display estimated monthly payment
+    function calculatePayment() {
+        const amount = parseFloat(document.getElementById('amount').value) || 0;
+        const rate = parseFloat(document.getElementById('interest_rate').value) || 0;
+        const dueDate = document.getElementById('due_date').value;
+        
+        if (amount > 0 && rate > 0 && dueDate) {
+            const today = new Date();
+            const due = new Date(dueDate);
+            const months = Math.max(1, Math.ceil((due - today) / (1000 * 60 * 60 * 24 * 30)));
+            const monthlyRate = rate / 100 / 12;
+            const payment = amount * (monthlyRate * Math.pow(1 + monthlyRate, months)) / (Math.pow(1 + monthlyRate, months) - 1);
+            
+            if (!isNaN(payment) && payment > 0) {
+                document.getElementById('payment-estimate').innerHTML = 
+                    `<strong>Estimated Monthly Payment: $${payment.toFixed(2)}</strong>`;
+            }
+        }
+    }
+    
+    document.getElementById('amount').addEventListener('input', calculatePayment);
+    document.getElementById('interest_rate').addEventListener('input', calculatePayment);
+    document.getElementById('due_date').addEventListener('change', calculatePayment);
+</script>
+
+<div id="payment-estimate" style="text-align: center; margin-top: 1rem; color: #2c3e50; font-size: 1.1rem;"></div>
+{% endblock %}

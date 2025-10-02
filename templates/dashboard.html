@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - Loan Management System{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>Welcome to Your Dashboard, {{ user.username }}!</h1>
+    <p>Manage your loans and repayments from here.</p>
+</div>
+
+<div class="grid grid-3">
+    <div class="stats-card">
+        <div class="stats-number">{{ total_loans }}</div>
+        <div>Total Loans</div>
+    </div>
+    <div class="stats-card">
+        <div class="stats-number">${{ total_amount|floatformat:2 }}</div>
+        <div>Total Borrowed</div>
+    </div>
+    <div class="stats-card">
+        <div class="stats-number">${{ total_repaid|floatformat:2 }}</div>
+        <div>Total Repaid</div>
+    </div>
+</div>
+
+<div class="grid grid-2">
+    <div class="card">
+        <h2>Recent Loans</h2>
+        {% if recent_loans %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Due Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for loan in recent_loans %}
+                    <tr>
+                        <td>${{ loan.amount|floatformat:2 }}</td>
+                        <td><span class="status-badge status-{{ loan.status }}">{{ loan.get_status_display }}</span></td>
+                        <td>{{ loan.due_date }}</td>
+                        <td>
+                            <a href="{% url 'loan_detail' loan.id %}" class="btn">View</a>
+                            {% if loan.status == 'approved' %}
+                                <a href="{% url 'repayment_make' loan.id %}" class="btn btn-success">Pay</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No loans yet. <a href="{% url 'loan_apply' %}" class="btn">Apply for your first loan</a></p>
+        {% endif %}
+    </div>
+
+    <div class="card">
+        <h2>Quick Actions</h2>
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
+            <a href="{% url 'loan_apply' %}" class="btn btn-success">Apply for New Loan</a>
+            <a href="{% url 'loan_list' %}" class="btn">View All Loans</a>
+            <a href="{% url 'repayment_history' %}" class="btn">Payment History</a>
+            <a href="{% url 'profile' %}" class="btn">Update Profile</a>
+        </div>
+    </div>
+</div>
+
+{% if pending_loans %}
+<div class="card">
+    <h2>Pending Loan Applications</h2>
+    <div class="alert alert-info">
+        You have {{ pending_loans|length }} pending loan application(s). We'll notify you once they are reviewed.
+    </div>
+    {% for loan in pending_loans %}
+    <div style="border: 1px solid #ddd; padding: 1rem; margin: 0.5rem 0; border-radius: 4px;">
+        <strong>Loan #{{ loan.id }}</strong> - ${{ loan.amount|floatformat:2 }}
+        <span style="float: right;">Applied: {{ loan.created_at|date:"M d, Y" }}</span>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+{% endblock %}

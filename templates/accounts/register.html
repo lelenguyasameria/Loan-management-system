@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}Register - Loan Management System{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 500px; margin: 2rem auto;">
+    <h2>Create Your Account</h2>
+    
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email (Optional):</label>
+            <input type="email" id="email" name="email">
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+
+        <div class="form-group">
+            <label for="phone_number">Phone Number:</label>
+            <input type="text" id="phone_number" name="phone_number" required>
+        </div>
+
+        <div class="form-group">
+            <label for="national_id">National ID:</label>
+            <input type="text" id="national_id" name="national_id" required>
+        </div>
+
+        <button type="submit" class="btn btn-success" style="width: 100%;">Register</button>
+    </form>
+    
+    <div style="text-align: center; margin-top: 1rem;">
+        <p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>
+    </div>
+</div>
+{% endblock %}

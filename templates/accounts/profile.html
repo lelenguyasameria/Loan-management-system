@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}Profile - Loan Management System{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>Your Profile</h2>
+    
+    <div class="grid grid-2">
+        <div>
+            <h3>Account Information</h3>
+            <p><strong>Username:</strong> {{ user.username }}</p>
+            <p><strong>Email:</strong> {{ user.email|default:"Not provided" }}</p>
+            <p><strong>Phone Number:</strong> {{ user.phone_number }}</p>
+            <p><strong>National ID:</strong> {{ user.national_id }}</p>
+            <p><strong>Member Since:</strong> {{ user.date_joined|date:"M d, Y" }}</p>
+        </div>
+        
+        <div>
+            <h3>Loan Summary</h3>
+            <p><strong>Total Loans:</strong> {{ user.loans.count }}</p>
+            <p><strong>Pending Applications:</strong> {{ pending_loans_count }}</p>
+            <p><strong>Approved Loans:</strong> {{ approved_loans_count }}</p>
+            <p><strong>Total Amount Borrowed:</strong> ${{ total_borrowed|floatformat:2 }}</p>
+        </div>
+    </div>
+    
+    <div style="margin-top: 2rem;">
+        <a href="{% url 'dashboard' %}" class="btn">Back to Dashboard</a>
+        <a href="{% url 'logout' %}" class="btn btn-danger">Logout</a>
+    </div>
+</div>
+{% endblock %}

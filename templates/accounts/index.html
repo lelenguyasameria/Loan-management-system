@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}Welcome - Loan Management System{% endblock %}
+
+{% block content %}
+<div class="card" style="text-align: center;">
+    <h1>Welcome to Loan Management System</h1>
+    <p>Your trusted partner for quick and easy loan applications.</p>
+    
+    <div style="margin: 2rem 0;">
+        <h2>Get Started Today</h2>
+        <p>Apply for loans, track your applications, and manage repayments all in one place.</p>
+    </div>
+    
+    <div style="display: flex; gap: 1rem; justify-content: center; margin: 2rem 0;">
+        <a href="{% url 'register' %}" class="btn btn-success">Register Now</a>
+        <a href="{% url 'login' %}" class="btn">Login</a>
+    </div>
+</div>
+
+<div class="grid grid-3">
+    <div class="card" style="text-align: center;">
+        <h3>Quick Application</h3>
+        <p>Apply for loans in just a few minutes with our streamlined process.</p>
+    </div>
+    <div class="card" style="text-align: center;">
+        <h3>Real-time Tracking</h3>
+        <p>Track your loan applications and payment history in real-time.</p>
+    </div>
+    <div class="card" style="text-align: center;">
+        <h3>Secure Platform</h3>
+        <p>Your personal and financial information is protected with top-level security.</p>
+    </div>
+</div>
+{% endblock %}

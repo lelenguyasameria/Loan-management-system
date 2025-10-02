@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %}Payment Successful - Loan Management System{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 600px; margin: 2rem auto; text-align: center;">
+    <div style="color: #27ae60; font-size: 3rem; margin-bottom: 1rem;">✓</div>
+    
+    <h2>Payment Successful!</h2>
+    
+    <div style="background-color: #d4edda; padding: 1.5rem; border-radius: 8px; margin: 2rem 0;">
+        <h3>Payment Details</h3>
+        <p><strong>Payment ID:</strong> #{{ payment.id }}</p>
+        <p><strong>Loan ID:</strong> #{{ payment.loan.id }}</p>
+        <p><strong>Amount Paid:</strong> ${{ payment.amount_paid|floatformat:2 }}</p>
+        <p><strong>Payment Date:</strong> {{ payment.payment_date|date:"M d, Y g:i A" }}</p>
+
+    </div>
+    
+    <div style="background-color: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin: 2rem 0;">
+        <h3>Updated Loan Status</h3>
+        <p><strong>Original Loan Amount:</strong> ${{ payment.loan.amount|floatformat:2 }}</p>
+        <p><strong>Total Paid So Far:</strong> ${{ total_paid|floatformat:2 }}</p>
+        <p><strong>Remaining Balance:</strong> 
+            <span style="font-size: 1.2rem; color: {{ remaining_balance|yesno:'#e74c3c,#27ae60' }};">
+                ${{ remaining_balance|floatformat:2 }}
+            </span>
+        </p>
+        {% if remaining_balance <= 0 %}
+            <div style="background-color: #d1ecf1; padding: 1rem; border-radius: 4px; margin-top: 1rem;">
+                <strong style="color: #0c5460;">🎉 Congratulations! Your loan has been fully repaid!</strong>
+            </div>
+        {% endif %}
+    </div>
+    
+    <div style="margin-top: 2rem;">
+        <a href="{% url 'loan_detail' payment.loan.id %}" class="btn btn-success">View Loan Details</a>
+        <a href="{% url 'repayment_history' %}" class="btn">Payment History</a>
+        <a href="{% url 'dashboard' %}" class="btn">Dashboard</a>
+    </div>
+    
+    {% if remaining_balance > 0 %}
+    <div style="margin-top: 2rem; padding: 1rem; background-color: #fff3cd; border-radius: 4px;">
+        <p>You still have a balance of ${{ remaining_balance|floatformat:2 }} remaining.</p>
+        <a href="{% url 'repayment_make' payment.loan.id %}" class="btn btn-warning">Make Another Payment</a>
+    </div>
+    {% endif %}
+</div>
+
+<div class="card" style="max-width: 600px; margin: 0 auto;">
+    <h3>What's Next?</h3>
+    <ul>
+        {% if remaining_balance > 0 %}
+            <li>Continue making payments until the loan is fully repaid</li>
+            <li>Check your payment history anytime from the dashboard</li>
+        {% else %}
+            <li>Your loan is now complete! You can apply for new loans if needed</li>
+        {% endif %}
+        <li>Keep records of all your payments for tax purposes</li>
+        <li>Contact support if you have any questions about your account</li>
+    </ul>
+</div>
+{% endblock %}

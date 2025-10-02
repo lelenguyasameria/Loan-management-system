@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block title %}Payment History - Loan Management System{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>Payment History</h2>
+    
+    {% if repayments %}
+        <div class="grid grid-3" style="margin-bottom: 2rem;">
+            <div class="stats-card">
+                <div class="stats-number">{{ repayments|length }}</div>
+                <div>Total Payments</div>
+            </div>
+            <div class="stats-card">
+                <div class="stats-number">${{ total_amount|floatformat:2 }}</div>
+                <div>Total Amount Paid</div>
+            </div>
+            <div class="stats-card">
+                <div class="stats-number">{{ active_loans }}</div>
+                <div>Active Loans</div>
+            </div>
+        </div>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Payment ID</th>
+                    <th>Loan ID</th>
+                    <th>Amount Paid</th>
+                    <th>Payment Date</th>
+
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for payment in repayments %}
+                <tr>
+                    <td>#{{ payment.id }}</td>
+                    <td>
+                        <a href="{% url 'loan_detail' payment.loan.id %}">#{{ payment.loan.id }}</a>
+                    </td>
+                    <td>${{ payment.amount_paid|floatformat:2 }}</td>
+                    <td>{{ payment.payment_date|date:"M d, Y g:i A" }}</td>
+
+                    <td>
+                        <a href="{% url 'loan_detail' payment.loan.id %}" class="btn">View Loan</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Pagination if needed -->
+        {% if repayments.has_other_pages %}
+        <div style="text-align: center; margin-top: 2rem;">
+            {% if repayments.has_previous %}
+                <a href="?page={{ repayments.previous_page_number }}" class="btn">Previous</a>
+            {% endif %}
+            
+            <span style="margin: 0 1rem;">
+                Page {{ repayments.number }} of {{ repayments.paginator.num_pages }}
+            </span>
+            
+            {% if repayments.has_next %}
+                <a href="?page={{ repayments.next_page_number }}" class="btn">Next</a>
+            {% endif %}
+        </div>
+        {% endif %}
+        
+    {% else %}
+        <div style="text-align: center; padding: 2rem;">
+            <h3>No Payment History</h3>
+            <p>You haven't made any payments yet.</p>
+            <a href="{% url 'loan_list' %}" class="btn">View Your Loans</a>
+        </div>
+    {% endif %}
+</div>
+
+{% if recent_payments %}
+<div class="card">
+    <h3>Recent Activity</h3>
+    {% for payment in recent_payments %}
+    <div style="border: 1px solid #ddd; padding: 1rem; margin: 0.5rem 0; border-radius: 4px; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <strong>Payment #{{ payment.id }}</strong> for Loan #{{ payment.loan.id }}
+            <br>
+            <small style="color: #666;">{{ payment.payment_date|date:"M d, Y g:i A" }}</small>
+        </div>
+        <div style="text-align: right;">
+            <strong style="color: #27ae60;">${{ payment.amount_paid|floatformat:2 }}</strong>
+            <br>
+            <small>Payment</small>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+{% endblock %}
