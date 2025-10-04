@@ -76,7 +76,7 @@ def loan_detail_view(request, pk):
     repayments = loan.repayments_set.all().order_by('-payment_date')
     
     total_paid = sum(repayment.amount_paid for repayment in repayments)
-    remaining_balance = float(loan.amount) - total_paid
+    remaining_balance = loan.amount - total_paid
     
     context = {
         'loan': loan,

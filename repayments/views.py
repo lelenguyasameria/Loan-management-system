@@ -110,7 +110,7 @@ def repayment_success_view(request, payment_id):
     
     # Calculate totals
     total_paid = sum(repayment.amount_paid for repayment in payment.loan.repayments_set.all())
-    remaining_balance = float(payment.loan.amount) - total_paid
+    remaining_balance = payment.loan.amount - total_paid
     
     context = {
         'payment': payment,
